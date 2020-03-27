@@ -1,0 +1,12 @@
+{
+    "manifest_version": 2,
+
+    "name": "SARS-CoV-2 Pandemic Details",
+    "description": "Global case counts for the SARS-CoV-2 pandemic",
+    "version": "1.0",
+
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    }
+}

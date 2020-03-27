@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Canadian Covid-19 Cases</title>
+    <style>
+        body { 
+            margin:0px; padding:10px; 
+            background-color:green; 
+            text-align:right;           
+        }
+        section { 
+            padding:20px; 
+            background-color:white;
+            min-width:300px;
+            text-align:right;
+        }
+        select { 
+            padding:5px 10px;
+            min-width:300px;
+            margin-top:10px;
+        }
+        label { font-size:1.5em; display:block; margin-bottom:10px; }
+        label:last-child { margin-bottom:0px; }
+        input { text-align:center; width:30%; margin-left:10px; }
+        hr { margin:20px 0px; border:1px solid green; }
+        .hidden { display:none; }
+    </style>
+  </head>
+  <body>
+    <section>
+        <h1>SARS-CoV-2 Pandemic Details</h1>
+        <select id="country" class="hidden">
+            <option value="" selected>Country ...</option>
+        </select>
+        <select id="province" class="hidden">
+            <option value="" selected>State / Prov ...</option>
+        </select>
+        <hr>
+        <label>Total<input id="total" value="Loading" readonly></label>
+        <label>Confirmed<input id="confirmed" value="Loading" readonly></label>
+        <label>Recovered<input id="recovered" value="Loading" readonly></label>
+        <label>Deceased<input id="deceased" value="Loading" readonly></label>
+        <hr>
+        <canvas id="report" class="hidden"></canvas>
+    </section>
+    <script src="popup.js"></script>
+  </body>
+</html>
