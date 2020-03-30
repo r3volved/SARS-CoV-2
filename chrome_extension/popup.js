@@ -5,6 +5,8 @@ const confirmed = document.getElementById('confirmed')
 const recovered = document.getElementById('recovered')
 const deceased  = document.getElementById('deceased')
 const report    = document.getElementById('report')
+const rrate    = document.getElementById('rrate')
+const drate    = document.getElementById('drate')
 const countrySelect = document.getElementById('country')
 const provinceSelect = document.getElementById('province')
 
@@ -27,15 +29,15 @@ const loadAll = async ( data ) => {
     var sum = { confirmed:0, recovered:0, deceased:0 }
     var countries = covid19Stats.reduce((acc,item) => {
         var { country, confirmed = 0, recovered = 0, deaths = 0 } = item
-        acc[country] = acc[country] || { confirmed:0, recovered:0, deceased:0, total:0 }
-        acc[country].confirmed += confirmed
-        acc[country].recovered += recovered
-        acc[country].deaths += deaths
-        acc[country].total += (confirmed + recovered + deaths)
+        acc[country] = acc[country] || { confirmed:0, recovered:0, deaths:0, total:0 }
+        acc[country].confirmed += confirmed || 0
+        acc[country].recovered += recovered || 0
+        acc[country].deaths += deaths || 0
+        acc[country].total += (confirmed + recovered + deaths) || 0
 
-        sum.confirmed += confirmed
-        sum.recovered += recovered
-        sum.deceased  += deaths
+        sum.confirmed += confirmed || 0
+        sum.recovered += recovered || 0
+        sum.deceased  += deaths || 0
         return acc
     },{})
 
@@ -43,12 +45,14 @@ const loadAll = async ( data ) => {
     recovered.value = sum.recovered.toLocaleString()
     deceased.value  = sum.deceased.toLocaleString()
     total.value     = (sum.confirmed + sum.recovered + sum.deceased).toLocaleString()
+    rrate.value     = (sum.recovered / (sum.confirmed + sum.recovered + sum.deceased) * 100).toFixed(2)
+    drate.value     = (sum.deceased / (sum.confirmed + sum.recovered + sum.deceased) * 100).toFixed(2)
 
     var countryKeys = Object.keys(countries)
-        .sort((a,b) => countries[b].total - countries[a].total)
+        .sort((a,b) => countries[b].deaths - countries[a].deaths)
 
     countrySelect.innerHTML = [`<option value="">Country ...</option>`]
-        .concat( countryKeys.map(c => `<option value="${c}">${c} (${countries[c].total.toLocaleString()})</option>`) )
+        .concat( countryKeys.map(c => `<option value="${c}">${c} (${countries[c].deaths.toLocaleString()})</option>`) )
         .join("")
 
     countrySelect.classList.remove('hidden')
@@ -64,7 +68,7 @@ const loadCountry = async ( country, data ) => {
         .filter(d => d.country == country)
         .reduce((acc,prov) => {
             var { confirmed = 0, recovered = 0, deaths = 0 } = prov
-            acc[prov.province] = { confirmed, recovered, deceased:deaths, total:(confirmed + recovered + deaths) }
+            acc[prov.province] = { confirmed, recovered, deaths, total:(confirmed + recovered + deaths) }
             sum.confirmed += confirmed
             sum.recovered += recovered
             sum.deceased  += deaths
@@ -75,12 +79,14 @@ const loadCountry = async ( country, data ) => {
     recovered.value = sum.recovered.toLocaleString()
     deceased.value  = sum.deceased.toLocaleString()
     total.value     = (sum.confirmed + sum.recovered + sum.deceased).toLocaleString()
+    rrate.value    = (sum.recovered / (sum.confirmed + sum.recovered + sum.deceased) * 100).toFixed(2)
+    drate.value    = (sum.deceased / (sum.confirmed + sum.recovered + sum.deceased) * 100).toFixed(2)
 
     var provinceKeys = Object.keys(provinces)
-        .sort((a,b) => provinces[b].total - provinces[a].total)
+        .sort((a,b) => provinces[b].deaths - provinces[a].deaths)
 
     provinceSelect.innerHTML = [`<option value="">Provnce / State ...</option>`]
-        .concat( provinceKeys.map(c => `<option value="${c}">${c} (${provinces[c].total.toLocaleString()})</option>`) )
+        .concat( provinceKeys.map(c => `<option value="${c}">${c} (${provinces[c].deaths.toLocaleString()})</option>`) )
         .join("")
 
     provinceSelect.classList.remove('hidden')
@@ -106,6 +112,8 @@ const loadProvince = async ( country, province, data ) => {
     recovered.value = sum.recovered.toLocaleString()
     deceased.value  = sum.deceased.toLocaleString()
     total.value     = (sum.confirmed + sum.recovered + sum.deceased).toLocaleString()
+    rrate.value    = (sum.recovered / (sum.confirmed + sum.recovered + sum.deceased) * 100).toFixed(2)
+    drate.value    = (sum.deceased / (sum.confirmed + sum.recovered + sum.deceased) * 100).toFixed(2)
 
     report.classList.remove('hidden')
 
